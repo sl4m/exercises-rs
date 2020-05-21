@@ -1,0 +1,7 @@
+[package]
+name = "hashmap-rs"
+version = "0.1.0"
+authors = ["skim <skim@swainslane.co>"]
+edition = "2018"
+
+[dependencies]
