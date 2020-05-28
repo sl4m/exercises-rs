@@ -1,6 +1,18 @@
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
+macro_rules! map {
+    ( $( $x:expr ),* ) => {
+        {
+            let mut map = Hashmap::new();
+            $(
+                map.insert($x.0, $x.1);
+            )*
+            map
+        }
+    }
+}
+
 const HASH_SIZE: usize = 16;
 
 pub struct Hashmap<K: Hash + Eq, V> {
@@ -125,5 +137,12 @@ mod tests {
         assert_eq!(map.get(2), None);
         assert_eq!(map.remove(1), Some(4));
         assert_eq!(map.get(1), None);
+    }
+
+    #[test]
+    fn it_creates_a_hashmap_using_macro() {
+        let map = map![("foo", "bar"), ("baz", "buz")];
+        assert_eq!(map.get("foo"), Some(&"bar"));
+        assert_eq!(map.get("baz"), Some(&"buz"));
     }
 }
