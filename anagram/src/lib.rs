@@ -1,24 +1,25 @@
-use std::collections::HashSet;
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 pub fn anagrams_for<'a>(word: &str, possible_anagrams: &'a [&str]) -> HashSet<&'a str> {
-    let mut set = HashSet::new();
-    let mapped_word = char_count_map(word);
-    for possible in possible_anagrams {
-        if word.to_lowercase() != possible.to_lowercase() &&
-            mapped_word == char_count_map(possible) {
-            set.insert(*possible);
-        }
-    }
-    set
+    let mapped_word = char_count_map(&word.to_lowercase());
+    possible_anagrams
+        .iter()
+        .filter_map(|possible| {
+            let lc_possible = possible.to_lowercase();
+            if word.to_lowercase() != lc_possible && mapped_word == char_count_map(&lc_possible) {
+                Some(*possible)
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn char_count_map(word: &str) -> HashMap<char, usize> {
-    word.chars()
-        .fold(HashMap::new(), |mut acc, ch| {
-            for c in ch.to_lowercase() {
-                let counter = acc.entry(c).or_insert(0);
-                *counter += 1;
-            }
-            acc})
+    word.chars().fold(HashMap::new(), |mut acc, ch| {
+        let counter = acc.entry(ch).or_insert(0);
+        *counter += 1;
+        acc
+    })
 }
